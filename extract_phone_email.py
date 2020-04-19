@@ -3,17 +3,19 @@
 import pyperclip, re, os, datetime
 
 #DO: getting the data
+try:
+    clipData=pyperclip.paste()
+except ModuleNotFoundError:
+    print('Pyperclip module is not found. Continue the process below')
+    clipData=''
+finally:
+    if len(clipData)==0:
+        print('Couldn\'t find data in clipboard.')
+        text=input('Enter your text here: \n')
+    else:
+        text=clipData
 
-clipData=pyperclip.paste()
-
-if len(clipData)==0:
-    print('Your clipboard is empty.')
-    text=input('Enter your text here: \n')
-else:
-    text=clipData
-
-#DO: Pattern formation
-    
+#DO: Pattern formation  
 phoneRegex=re.compile('''(
 (\+91 | 91)?                    #Indian country code
 \d{10}                          #actual number
@@ -26,7 +28,6 @@ emailRegex=re.compile(r'''
 ''',re.VERBOSE)
 
 #DO: finding the phone numbers and emails
-
 print('Finding now')
 extractedPhone=phoneRegex.findall(text)
 email=emailRegex.findall(text)
@@ -35,7 +36,6 @@ email=emailRegex.findall(text)
 #DEBUG: print(email)
 
 #DO: filter phone numbers from extracted contents as regex groups them up
-
 phone=[]
 for i in extractedPhone:
     phone.append(i[0])
@@ -44,7 +44,6 @@ for i in extractedPhone:
 #DEBUG: print('\n'.join(email))
 
 #DO: saving the data
-
 currentDir=os.getcwd()
 mainDir=currentDir+'\\extractedfiles'
 
